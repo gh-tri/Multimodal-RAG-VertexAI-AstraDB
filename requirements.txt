@@ -1,0 +1,6 @@
+google-cloud-aiplatform
+ragstack-ai
+pandas
+pillow
+requests
+jupyter
