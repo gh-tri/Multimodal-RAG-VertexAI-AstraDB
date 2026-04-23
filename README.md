@@ -1,56 +1,36 @@
-# Multimodal RAG with Vertex AI and Astra DB
+# Multimodal RAG with Vertex AI & Astra DB
 
-A simple learning project that shows how to build a **multimodal Retrieval-Augmented Generation (RAG)** pipeline using:
+This notebook demonstrates an end-to-end **multimodal Retrieval-Augmented Generation (RAG)** pipeline. Given a photo of an unknown coffee machine part, the system finds visually similar products from a catalog and uses Gemini to generate a grounded, natural-language answer with product names, prices, and purchase links.
 
-- **Google Vertex AI / Gemini**
-- **Astra DB (Cassandra)**
+---
 
-The project takes an input image, retrieves similar products from a vector database, and then uses Gemini 2.5 pro to generate a grounded answer using both the image and the retrieved catalog context.
+## How It Works
 
-## Project idea
+1. **Sanity checks** — verify Gemini handles both text and image prompts correctly
+2. **Build a product catalog** — a small in-memory dataset of Breville espresso machine parts (name, price, image URL, product URL)
+3. **Embed the catalog** — generate 1408-dimensional image embeddings for each product using `multimodalembedding@001`
+4. **Store in Astra DB** — persist all vectors and metadata in an Astra DB vector collection
+5. **Embed the query image** — encode the uploaded test image with the same model
+6. **Vector search** — retrieve the top-3 most similar products from Astra DB
+7. **Generate an answer** — pass the query image + retrieved context to Gemini for a grounded response
 
-This notebook demonstrates a small **visual product/component retrieval** workflow.
+---
 
-Example flow:
+## Stack
 
-1. Provide an image of a product or component
-2. Generate an embedding for the image
-3. Store and search product embeddings in Astra DB
-4. Retrieve the most similar products
-5. Pass the image + retrieved product context to Gemini
-6. Generate a grounded response with likely product name, replacement suggestions, and related details
+| Component | Role |
+|---|---|
+| [Vertex AI](https://cloud.google.com/vertex-ai) | Gemini 2.5 Pro (generation) + `multimodalembedding@001` (embeddings) |
+| [Astra DB](https://www.datastax.com/products/datastax-astra) | Vector store (1408-dim collection) |
+| [RAGStack](https://docs.datastax.com/en/ragstack/index.html) | Astra DB Python client (`astrapy`) |
+| Google Colab | Notebook runtime |
 
+---
 
-## Use case
-
-A practical use case is a **replacement part finder**.
-
-For example:
-- upload a coffee machine component image
-- retrieve visually similar products from a catalog
-- ask Gemini to explain what the part is
-- suggest possible replacement products with price / URL from retrieved results
-
-The same logic can be extended to:
-- spare part search
-- hardware/component lookup
-- catalog search from images
-- visual product recommendation
-
-## Files
-
-```text
-.
-├── Multimodal_RAG_VertexAI_GCP_Langchain_cleaned.ipynb
-├── README.md
-└── requirements.txt
-```
-
-## Requirements
-
-You will need:
-
-- a Google Cloud project with Vertex AI enabled
-- authenticated access to GCP
-- an Astra DB database / token
-- environment variables or notebook prompts for credentials
+## Prerequisites
+- A **GCP project** with Vertex AI API enabled
+- An **Astra DB** account with a database endpoint and token
+- Python 3.9+
+- A **GCP project** with Vertex AI API enabled
+- An **Astra DB** account with a database endpoint and token
+- Python 3.9+
