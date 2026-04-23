@@ -31,6 +31,3 @@ This notebook demonstrates an end-to-end **multimodal Retrieval-Augmented Genera
 - A **GCP project** with Vertex AI API enabled
 - An **Astra DB** account with a database endpoint and token
 - Python 3.9+
-- A **GCP project** with Vertex AI API enabled
-- An **Astra DB** account with a database endpoint and token
-- Python 3.9+
